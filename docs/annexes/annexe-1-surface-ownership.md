@@ -1,6 +1,7 @@
+---
 annexe: Annexe 1 (Surface Ownership: Discord vs PWA)
 version: v2025.08
-status: Locked
+status: LOCKED
 last_updated: 2025-08-15 (Europe/London)
 owners: [GuardianArrow]
 refs:
@@ -17,7 +18,6 @@ refs:
   - Annexe 8 (Observability & SLOs)
   - Annexe 11 (Accessibility)
   - Annexe 16 (Server layout & permission templates)
-
 ---
 
 # Annexe 1 — Surface Ownership: Discord vs PWA (App) — ✅ **LOCKED**

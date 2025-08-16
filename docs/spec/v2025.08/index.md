@@ -15,7 +15,7 @@ MODULES
 [Module D — Localization & Internationalization (i18n) Core](../../modules/module-d-i18n-core.md)
 [Module E — Culture & Community Core](../../modules/module-e-culture-core.md)
 
-[Annexe 1 — Surface Ownership: Discord vs PWA](../../annexes/annexe-1-surface-ownership.md)
+[Annexe 1 — Surface Ownership: Discord vs PWA](./annexes/annexe-1-surface-ownership.md)
 [Annexe 2 — Discord Executable Commands & UI Interactions](../../annexes/annexe-2-discord-commands-ui.md)
 [Annexe 3 — UX Surface & Components](../../annexes/annexe-3-ux-surface-components.md)
 [Annexe 4 — Database Schemas](../../annexes/annexe-4-database-schemas.md)

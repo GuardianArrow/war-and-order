@@ -1,0 +1,14 @@
+{
+  "name": "warorder-alliance",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": { "version": "9" }
+  },
+  "postCreateCommand": "pnpm i || true",
+  "customizations": {
+    "vscode": {
+      "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+    }
+  }
+}

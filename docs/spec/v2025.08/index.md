@@ -9,6 +9,8 @@ MODULES
 [Module B6 — Player Mentor Program](../../modules/module-b6-mentors.md)
 [Module B7 — Events Core](../../modules/module-b7-events-core.md)
 [Module B7.i — Events Sub-module Index](../../modules/module-b7i-events-index.md)
+[Module B7.1 — Elite Wars](../../modules/module-b7-1-elite-wars.md)
+
 
 
 

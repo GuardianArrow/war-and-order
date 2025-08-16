@@ -56,7 +56,7 @@ All modules **MUST** adhere to Module A and the compatible annexes.
 ---
 
 ## A2.5 Baseline Capability Surface (summary)
-(Details live in Modules B–J and Module H sub-modules.)
+(Details live in Modules and sub-modules.)
 1. **Onboarding & Role Assignment** — guided flow; language/TZ; Visitor→Member; profile builder.  
 2. **Permissions & Roles** — Policy Guard; role lookups; guru/specialist role assignment.  
 3. **Events & RSVP** — creation, templates, RSVPs, reminders; **Discord Scheduled Events mirroring**.  
@@ -270,6 +270,6 @@ Critical safety (e.g., privacy deletions) may bypass via `jobs.allowDuringMainte
 - **Annexe 10** — Data Protection & Privacy  
 - **Annexe 14** — API Contracts (endpoints to get/update Feature Flags)  
 - **Module D** — i18n & Localization platform  
-- **Module H** — Events engine (templates, lifecycle, attendance; may be flag-gated)
+- **Module B** — Events engine (templates, lifecycle, attendance; may be flag-gated)
 
 > ✅ **Locked** as of **2025-08-15 (Europe/London)**.

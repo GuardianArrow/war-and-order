@@ -7,4 +7,6 @@ MODULES
 [Module B4 — Onboarding & Profile Builder](../../modules/module-b4-onboarding.md)
 [Module B5 — Profile Edits & Removals](../../modules/module-b5-profile-edits.md)
 [Module B6 — Player Mentor Program](../../modules/module-b6-mentors.md)
+[Module B7 — Events Core](../../modules/module-b7-events-core.md)
+
 

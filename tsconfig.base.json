@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@policy/*": ["packages/shared-policy/src/*"],
+      "@schema/*": ["packages/shared-schema/src/*"],
+      "@db/*": ["packages/shared-db/src/*"],
+      "@i18n/*": ["packages/shared-i18n/src/*"],
+      "@telemetry/*": ["packages/shared-telemetry/src/*"],
+      "@utils/*": ["packages/shared-utils/src/*"],
+      "@comms/*": ["packages/shared-comms/src/*"],
+      "@api/*": ["packages/shared-api/src/*"]
+    }
+  }
+}

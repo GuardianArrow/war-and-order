@@ -23,3 +23,4 @@ MODULES
 [Annexe 6 — Policy Guard & Permission Rules](../../annexes/annexe-6-policy-guard.md)
 [Annexe 7 — Jobs, Scheduling & Idempotency](../../annexes/annexe-7-jobs-scheduling-idempotency.md)
 [Annexe 8 — Observability & Telemetry Taxonomy](../../annexes/annexe-8-observability-telemetry-taxonomy.md)
+[Annexe 9 — Build, Release & CI/CD](../../annexes/annexe-9-build-release-cicd.md)

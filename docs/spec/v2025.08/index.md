@@ -13,6 +13,6 @@ MODULES
 [Module B7.2 — War of Frontiers](../../modules/module-b7-2-wof.md)
 [Module C — Alliance Communication & Alerts](../../modules/module-c-communications.md)
 [Module D — Localization & Internationalization (i18n) Core](../../modules/module-d-i18n-core.md)
-
+[Module E — Culture & Community Core](../../modules/module-e-culture-core.md)
 
 

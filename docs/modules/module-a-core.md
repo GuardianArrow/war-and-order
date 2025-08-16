@@ -2,204 +2,274 @@
 module: Module A (Core System Architecture & Layers)
 version: v2025.08
 status: Locked
-last_updated: 2025-08-14
+last_updated: 2025-08-15 (Europe/London)
 owners: [GuardianArrow]
-annexe_refs: ["Annexe 4 (Database Schemas)", "Annexe 6 (Policy Guard)", "Annexe 16 (Folder Structure)"]
+annexe_refs:
+  - Annexe 3 (UX Surface & Components)
+  - Annexe 4 (Database Schemas)
+  - Annexe 5 (Tech stack & Discord intents/scopes)
+  - Annexe 6 (Policy Guard rules)
+  - Annexe 7 (Jobs, Scheduling & Idempotency)
+  - Annexe 8 (Observability)
+  - Annexe 9 (CI/CD & Release)
+  - Annexe 10 (Data Protection & Privacy)
+  - Annexe 14 (API Contracts)
 ---
 
-# Module A — Core System Architecture & Layers
+# Module A — Core System Architecture & Layers (LOCKED)
 
-## Purpose & Scope
-Module A defines the system-wide architecture, constants, standards, and cross-cutting services that every other feature module must adhere to.
+## A1. Purpose
+Module A defines the system-wide architecture, invariants, and cross-cutting services every feature module must follow. It is the single source of truth for:
+- Auth & Identity; Roles & Permissions (**Policy Guard**)
+- Internationalisation (**i18n**) & Time rules
+- Data Storage & Schemas
+- Notifications & Messaging plumbing
+- Security, Audit, Reliability (jobs, idempotency)
+- Observability (logs/metrics/traces), CI/CD, Privacy
+- Feature Flags (per-guild capability switches)
 
-It governs:
-- Authentication & Access Control
-- Roles & Permissions
-- Internationalisation (i18n)
-- Timezone Handling
-- Data Storage
-- Notification & Messaging Infrastructure
-- Security & Audit Logging
-
-All sub-modules must reference Module A for consistency and integration.
+All modules **MUST** adhere to Module A and the compatible annexes.
 
 ---
 
-## A1. Project Overview
+## A2. Project Overview
 
 ### Goals
-1. Create a single hub for alliance coordination, onboarding, event scheduling, and role management.
-2. Offer **chat-first** flows in Discord, paired with **mobile-first** web dashboards for oversight and analytics.
-3. Reduce R5/R4 manual administration with automation, templating, and pre-configured flows.
-4. Operate within a monthly budget of **≤ £20** (hosting + API costs).
+- One hub for onboarding, coordination, events, roles, and culture.  
+- Chat-first in Discord; mobile-first PWA for dashboards/forms.  
+- Reduce R4/R5 admin via automation & templating.  
+- Operate within **£20/month**.
 
 ### Targets
-- Player Base: ~100 active players across global time zones  
-- Primary UX: **Discord Bot**  
-- Secondary UX: **Web PWA**  
-- Data Storage: **MongoDB Atlas** (free tier)  
-- Performance: Low-latency responses; in-memory caching for high-traffic lookups
+- ~100 players across time zones.  
+- Primary UX: **Discord Bot**; Secondary UX: **Web PWA**.  
+- Storage: **MongoDB Atlas (free tier)** + optional in-memory LRU cache.  
+- Low-latency responses; **job-driven** background work.
 
 ### Core Integrations
-- **Discord** = authentication layer for all user access
-- PWA communicates via a **bot-owned backend API**
-- All times stored in **UTC** and displayed according to user’s **timezone**
-- **Localisation** files for all bot & PWA text (JSON, modular)
+- **Discord = authentication layer** for bot & PWA (OAuth).  
+- PWA → backend API **owned by the bot service**.  
+- All times stored **UTC**, displayed in user’s timezone.  
+- Localisation bundles (JSON) for bot & PWA strings.  
+- See **Annexe 5** for SDKs, versions, intents/scopes/permissions.
 
 ---
 
-## A2. Users & Roles
-
-### User Personas (Game-aligned)
-- **R5 – Alliance Leader**: Full system control; ultimate permissions  
-- **R4 – Deputies**: Operational control; event creation & member management  
-- **R3 – Assist Leaders**: Group-level leadership; moderate permissions  
-- **Elite**: Recognised veteran members  
-- **Member**: Standard players  
-- **Visitor**: Temporary or trial members
-
-### Specialist Roles (Functional)
-- CBSP Manager / CBSP Member  
-- Player Mentor  
-- Lottery Manager  
-- Resource Seller
-
-### Guru Roles (Skill Profiles)
-- Marches & Formations, Farm Builder, Getting to Orange, Titan Pro, Beast Growth, Castle Development, Generating Resources
-
-### Role Assignment Logic
-- Guru/Specialist roles earned via **Profile Builder or Quiz**
-- Auto-assigned in Discord after verification
-- Roles searchable via `/whohas <role>` and on the Web Dashboard
+## A2.5 Baseline Capability Surface (summary)
+(Details live in Modules B–J and Module H sub-modules.)
+1. **Onboarding & Role Assignment** — guided flow; language/TZ; Visitor→Member; profile builder.  
+2. **Permissions & Roles** — Policy Guard; role lookups; guru/specialist role assignment.  
+3. **Events & RSVP** — creation, templates, RSVPs, reminders; **Discord Scheduled Events mirroring**.  
+4. **Announcements** — scheduled broadcasts; multi-language; **Quiet Hours** aware.  
+5. **Directory & Profiles** — search; cards; availability; mentor matching.  
+6. **Moderation** — mute/warn/kick/ban; audit logs.  
+7. **Web PWA** — login with Discord; calendars; bulk ops; analytics.  
+8. **Data & Storage** — Mongo schemas; **TTL & cleanup jobs**.  
+9. **Notifications** — DMs, channel posts, optional web push.  
+10. **Feature Flags** — per-guild toggles to enable/disable at runtime.
 
 ---
 
-## A3. Permissions Matrix
+## A3. High-Level Architecture
+
+### Apps
+- **bot** — Discord interactions, component handlers, event mirroring, alerts.  
+- **api** — REST/GraphQL for PWA; policy checks; audit; rate-limit & auth.  
+- **web** — PWA (mobile-first, offline-friendly reads, i18n).  
+- **worker** — queues, reminders, rollups, cleanup, exports.
+
+### Shared packages
+- **policy** — Policy Guard rules & helpers (reads Feature Flags).  
+- **schema** — TS types & JSON Schemas (mirrors Annexe 4).  
+- **i18n** — Module D keys & locale bundles.
+
+### Data
+- **MongoDB Atlas** (Annexe 4); **TTL indexes** where viable; scheduled cleanup jobs otherwise.
+
+### Telemetry
+- Logs/Metrics/Traces (Annexe 8).
+
+### CI/CD
+- GitHub Actions; **Blue-Green** deploy; release discipline (Annexe 9).
+
+### Privacy
+- DPA, retention, DSR (Annexe 10).
+
+---
+
+## A4. Auth & Identity
+- PWA OAuth scopes: `identify`, `guilds`.  
+- Bot installation scopes: `bot`, `applications.commands`.  
+- Every record **scoped by `guildId`** (multi-guild safety; no cross-guild leakage).  
+- Identifiers are **Discord IDs** (no emails/real names).  
+- Discord intents/scopes & bot permissions detailed in Annexe 5.
+
+### A4.1 Data Invariants (normative)
+All mutable documents MUST include:
+- `guildId: string` (required, indexed)  
+- `version: int` (CAS; see **A9.2**)  
+- `createdAt: ISODate`, `updatedAt: ISODate`  
+- Soft-delete when applicable: `deletedAt?: ISODate`, `deletedBy?: string`  
+  - Hard deletes only for privacy erasure (Annexe 10).
+
+---
+
+## A5. Roles & Permissions (**Policy Guard**)
+- Rank roles: **R5, R4, R3, Elite, Member, Visitor**.  
+- Program/Specialist roles (e.g., **CBSP Manager/Member**, **Mentor**) & **Guru** roles (skills).
+
+**Policy Guard** is authoritative for authorization:
+- Minimum rank per action; role ownership/manager checks.  
+- **Quiet Hours & rate-limit aware** broadcast gating.  
+- **Feature Flag evaluation before permission checks** (see **A5.2**).  
+- All decisions **ALLOW / DENY / SOFT_ALLOW** logged with reasons (Annexe 8).  
+- Command defaults are minimal; rely on Policy Guard + Discord role checks.
+
+### A5.1 Default Capability Matrix (baseline reference)
+(Policy Guard may override; this is the default template.)
 
 | Role   | Create Events | Manage Roles | Broadcast | Approve Plans | Moderate | Kick/Ban | Mute | RSVP | View Schedules | Set Availability |
 |--------|----------------|--------------|-----------|---------------|----------|----------|------|------|----------------|------------------|
 | **R5** | ✅              | ✅            | ✅         | ✅             | ✅        | ✅        | ✅    | ✅    | ✅              | ✅                |
-| **R4** | ✅ Promote      | ✅            | ✅         | ✅             | ✅        | ✅        | ✅    | ✅    | ✅              | ✅                |
+| **R4** | ✅ (Promote)    | ✅            | ✅         | ✅             | ✅        | ✅        | ✅    | ✅    | ✅              | ✅                |
 | **R3** | ❌              | ❌            | ✅         | ❌             | ✅        | ❌        | ✅    | ✅    | ✅              | ✅                |
 | **Elite** | ❌           | ❌            | ❌         | ❌             | ❌        | ❌        | ❌    | ✅    | ✅              | ✅                |
 | **Member** | ❌          | ❌            | ❌         | ❌             | ❌        | ❌        | ❌    | ✅    | ✅              | ✅                |
 | **Visitor** | ❌         | ❌            | ❌         | ❌             | ❌        | ❌        | ❌    | ❌    | ✅ (limited)    | ❌                |
 
-Final, enforceable rules live in **Annexe 6 – Policy Guard**.
+### A5.2 Feature Flags (per-guild; runtime)
+**Purpose.** Enable/disable modules and fine-grained capabilities per guild **without redeploys**.  
+**Storage.** `settings.featureFlags` in Annexe 4 (schema below).
+
+**Example keys (namespaced):**
+- `events.enabled`, `events.eliteWars`, `events.wof`, `events.publishToDiscordScheduler`  
+- `cbsp.enabled`, `cbsp.depotEditing`  
+- `shields.enabled`  
+- `mentor.enabled`, `mentor.maxStudents`  
+- `culture.enabled`, `culture.quizzes`, `culture.kudos`  
+- `attendance.bulkMarking`  
+- `maintenance.enabled` (see **A7.1/A9.1**)
+
+**Evaluation order (per request)**
+1. **Maintenance Mode** hard-deny gate (A7.1/A9.1).  
+2. **Feature Flag** resolution (guild-scoped; default **false** if missing).  
+3. **Policy Guard** permission checks (role/rank, program membership).
+
+**Outcomes.**
+- Disabled feature → **SOFT_ALLOW=false**: explain “Feature unavailable” with key name.  
+- Logs include `{ flagKey, evaluated=false }`.  
+- UI hides disabled controls; slash handlers reply with localized notice.
+
+**Ops.**
+- Flags editable by **R5** via PWA admin (Annexe 14 endpoints).  
+- Changes **audited** and **effective immediately**; workers re-read flags on job start.
 
 ---
 
-## A4. Locales & Time Zones
-
-### Supported Languages (Phase 1)
-EN, Arabic, German, Lithuanian, Serbian, French, Portuguese, Spanish, Vietnamese, Chinese, Korean, Russian, Polish, Ukrainian, Brazilian Portuguese, Venezuelan Spanish, Romanian, Swedish
-
-### Localisation Requirements
-- Translation keys stored in **modular JSON** files
-- Players can set language via `/setlanguage` (Discord) or Web Profile
-- Fallback = **English** if string not found
-
-### Time Zone Handling
-- All times stored in **UTC** in DB
-- Displayed in user’s set timezone (configurable via `/settimezone`)
-- Auto-detect timezone on first PWA visit: `Intl.DateTimeFormat().resolvedOptions().timeZone`
+## A6. Localization & Time
+- **Module D** manages i18n keys, locales, ICU plurals, and RTL.  
+- **Supported (Phase 1):** EN (fallback), Arabic, German, Lithuanian, Serbian, French, Portuguese, Spanish, Vietnamese, Chinese, Korean, Russian, Polish, Ukrainian, Brazilian Portuguese, Venezuelan Spanish, Romanian, Swedish.  
+- **Times:** store **UTC**, display user-local TZ (profile setting or auto-detected on first PWA visit).  
+- Reminder/job logic uses **UTC**; only formatting is TZ-localized.
 
 ---
 
-## A5. Core Features & Modules (Baseline)
+## A7. Notifications & Messaging
+- Delivery: **DM**, channel posts, **web push** (opt-in).  
+- Audience targeting by roles/programs/teams; **Quiet Hours honored**.  
+- **Job-driven** with retries & dedupe (Annexe 7).  
+- For **Discord Scheduled Events mirroring** see Module H (Events) and Annexe 5.
 
-1) **Onboarding & Role Assignment**  
-   - Guided onboarding flow in Discord DM  
-   - Collects language preference & timezone  
-   - Assigns default **Visitor** role  
-   - Profile Builder collects in-game name, castle level, preferred roles
-
-2) **Role & Permission Management**  
-   - Bot enforces permission checks  
-   - Role lookup via commands and web filters
-
-3) **Event Scheduling & RSVP**  
-   - Event creation (title, time, description, RSVP options)  
-   - Recurring event support  
-   - RSVP via reaction, slash command, or web form  
-   - Auto reminders at **24h** & **1h** before event
-
-4) **Announcements & Broadcasts**  
-   - Role-targeted broadcast messages  
-   - Scheduled announcements for recurring reminders  
-   - Multi-language broadcast support
-
-5) **Member Directory & Profiles**  
-   - Search by in-game name, Discord name, roles  
-   - Player card with timezone, recent activity, availability  
-   - Mentor matching by Guru skillset
-
-6) **Admin & Moderation Tools**  
-   - Mute, warn, kick, ban commands  
-   - Action logging  
-   - Auto-remove inactive visitors after set period
-
-7) **Web Dashboard (PWA)**  
-   - Discord login  
-   - Member management & event calendar  
-   - Profile editing for availability & roles
-
-8) **Data & Storage**  
-   - MongoDB Atlas for DB  
-   - Collections: **Users, Roles, Events, RSVPs, Settings, Logs**  
-   - Store only **game-relevant** data
-
-9) **Notifications & Reminders**  
-   - Discord DMs for events, confirmations, and alerts  
-   - Optional PWA push notifications
+### A7.1 Maintenance Mode (global pause)
+A global maintenance flag pauses reminder/broadcast fan-out and prevents new publishes.
+- **UX:** Leader panels show “Maintenance Mode active—sends paused.”  
+- **Delivery:** Workers enqueue but **do not deliver** alerts while enabled (Annexe 7).  
+- **Scope:** Applies to reminders, broadcasts, and publish actions; read-only views remain.  
+- **Control:** `settings.maintenance.enabled` (Annexe 4) and Feature Flag `maintenance.enabled`.
 
 ---
 
-## A6. Security & Audit
-- All role changes, event edits, and moderation actions **logged**
-- **Bot-side permission checks** to prevent bypass
-- **No sensitive personal info** stored
+## A8. Security & Audit
+- **Least-privilege** bot role; prefer channel overrides over broad server perms.  
+- All privileged operations **logged**: who/what/when/reason (Annexe 8).  
+- **Secret rotation** quarterly; scoped tokens per environment.  
+- **Backups & restore drills** (Annexe 9).
 
 ---
 
-## Interfaces (provided by Module A)
-- **Auth & Identity:** Discord OAuth2 + guild membership checks  
-- **Policy Guard:** role/claim evaluation (Annexe 6)  
-- **Feature Flags & Maintenance:** per-guild flags; global maintenance gate  
-- **i18n:** key resolver + per-user locale  
-- **Time:** UTC storage, per-user display, helpers  
-- **Storage:** Mongo client + collection access helpers  
-- **Comms:** Discord API client wrapper; later: notification bus  
-- **Telemetry/Audit:** logger, metrics, audit trail hooks
+## A9. Reliability & Jobs
+- Work queues with **priority lanes**, **idempotency keys**, **dedupe windows**.  
+- Retry policy with **bounded exponential backoff**; **DLQ** for non-retryable failures.  
+- Scheduling windows and **jitter** to avoid Discord 429 storms.  
+- Full policy: **Annexe 7**.
+
+### A9.1 Maintenance Gate
+Workers check `settings.maintenance.enabled === true` → **queue only**, do not deliver.  
+Critical safety (e.g., privacy deletions) may bypass via `jobs.allowDuringMaintenance=true`.
+
+### A9.2 Optimistic Concurrency & Conflict Handling (**LOCKED**)
+**Mechanism**
+- Every mutable document includes `version:int` and `updatedAt:ISO`.  
+- Compare-and-swap: match `{ _id, version }`; on success apply update and `version++`.  
+- Stale write → **409 CONFLICT** with `reason=CONFLICT.WRITE_STALE` + latest snapshot.
+
+**Where applied**
+- `events`, `event_templates`, `event_attendance_batches`  
+- `cbsp_members`, `cbsp_depot`, `cbsp_requests`  
+- `shields_posts`, `shields_subscriptions`  
+- `mentor_pairs`, `mentor_spaces`  
+- `users` (profile & availability), `culture_posts`, `kudos`, `badges`
+
+**API / UI**
+- HTTP: **ETag/If-Match** (responses `ETag: W/"<version>"`; clients send **If-Match**).  
+- Discord modals & PWA forms include `version`; conflicts show **Refresh & Reapply** (Annexe 3) with friendly diffs.
+
+**Jobs**
+- Treat **409** as retryable with short jitter; re-read latest; re-apply if applicable.
+
+**Observability**
+- Log conflicts: `result=deny`, `reason=CONFLICT.WRITE_STALE`, include `{ previousVersion, attemptedVersion }`.  
+- Metric: `am_conflicts_total{module,type}`; dashboard of top entities by conflict rate (24h).  
+- See **Annexe 8**.
 
 ---
 
-## Data (high-level)
-- `settings` (per-guild): channels, roles, featureFlags, maintenance  
-- `users` (Discord linkage), `roles_map` (guild role IDs), `events`, `rsvps`, `logs`
+## A10. Observability & SLOs
+- **Standard JSON logs**; counters/gauges/histograms; **OpenTelemetry** traces.  
+- **Key SLOs** (Annexe 8): alert timeliness, API latency, job failure rate, conflict rates.  
+- Dashboards **per guild** + global rollups.  
+- Feature Flag telemetry: `am_feature_flag_eval_total{flagKey,enabled}`.
 
 ---
 
-## Definition of Done (Module A)
-- [ ] i18n loader + locale selection available system-wide  
-- [ ] UTC/timezone helpers available; `/settimezone` endpoint/command spec’d  
-- [ ] Policy Guard primitives implemented (role→capability mapping hook)  
-- [ ] Feature flags + maintenance gate available  
-- [ ] Mongo client + collection helpers available  
-- [ ] Telemetry & audit hooks available  
-- [ ] Security posture documented (no PII; audit key actions)  
-- [ ] This spec referenced by all feature modules
+## A11. CI/CD
+- **Trunk-based**; protected `main`.  
+- **Staging → smoke → manual approval → Blue-Green prod**.  
+- Slash commands registered to **staging guild** first.  
+- Full pipeline & rollbacks: **Annexe 9**.  
+- **Pre-release check** lists Feature Flags diff per guild (intended on/off state).
 
 ---
 
-## Test Matrix
-| Case | Area | Steps | Expected |
-|------|------|-------|----------|
-| 1 | i18n fallback | Set unsupported locale, resolve key | English fallback string returned |
-| 2 | TZ render | Store UTC, set user TZ to Asia/Seoul | Local time shows correctly |
-| 3 | Policy check | R3 runs broadcast | Denied per matrix |
-| 4 | Flags | Disable comms_enabled | Broadcast commands blocked |
-| 5 | Maintenance | Enable maintenance | All outbound sends paused |
-| 6 | Audit | Change role, edit event | Audit entries recorded |
+## A12. Privacy
+- UK/EU **GDPR** alignment; **data minimization** (age range, not DOB).  
+- Retention schedules & **Data Subject Requests** (Annexe 10).  
+- No sensitive personal info beyond **Discord IDs & gameplay metadata**.  
+- Feature Flags are configuration, not personal data; **audited** changes include actor/time.
 
-✅ Module A is **Locked** as of **2025-08-14**.
+---
+
+## Cross-References
+- **Annexe 3** — UX Surface & Components (Discord button-first + Refresh & Reapply)  
+- **Annexe 4** — Database Schemas (includes `guildId`, `version`, `settings.featureFlags`, `settings.maintenance`)  
+- **Annexe 5** — Tech stack & Discord intents/scopes and bot permissions  
+- **Annexe 6** — Policy Guard rules (reads Feature Flags)  
+- **Annexe 7** — Jobs, Scheduling & Idempotency (respects Maintenance & Feature Flags)  
+- **Annexe 8** — Observability taxonomy (logs/metrics/traces; conflict & flag metrics)  
+- **Annexe 9** — CI/CD & Release (pre-release flags check)  
+- **Annexe 10** — Data Protection & Privacy  
+- **Annexe 14** — API Contracts (endpoints to get/update Feature Flags)  
+- **Module D** — i18n & Localization platform  
+- **Module H** — Events engine (templates, lifecycle, attendance; may be flag-gated)
+
+> ✅ **Locked** as of **2025-08-15 (Europe/London)**.

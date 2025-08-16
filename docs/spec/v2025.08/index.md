@@ -20,3 +20,5 @@ MODULES
 [Annexe 3 — UX Surface & Components](../../annexes/annexe-3-ux-surface-components.md)
 [Annexe 4 — Database Schemas](../../annexes/annexe-4-database-schemas.md)
 [Annexe 5 — Technology & External Services](../../annexes/annexe-5-technology-and-services.md)
+[Annexe 6 — Policy Guard & Permission Rules](../../annexes/annexe-6-policy-guard.md)
+[Annexe 7 — Jobs, Scheduling & Idempotency](../../annexes/annexe-7-jobs-scheduling-idempotency.md)

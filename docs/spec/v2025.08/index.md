@@ -31,3 +31,4 @@ MODULES
 [Annexe 14 — API Contracts & Error Codes](../../annexes/annexe-14-api-contracts-and-error-codes.md)
 [Annexe 15 — Data Migration & Seeding](../../annexes/annexe-15-data-migration-and-seeding.md)
 [Annexe 16 — Repository Structure & Naming Conventions](../../annexes/annexe-16-repository-structure-and-naming-conventions.md)
+[Annexe 17 — Design System & Content Guidelines](../../annexes/annexe-17-design-system-and-content-guidelines.md)

@@ -28,3 +28,4 @@ MODULES
 [Annexe 11 — Accessibility & Localization QA](../../annexes/annexe-11-accessibility-localization-qa.md)
 [Annexe 12 — Load, Capacity & Cost Budget](../../annexes/annexe-12-load-capacity-cost-budget.md)
 [Annexe 13 — Risk Register & Threat Model](../../annexes/annexe-13-risk-register-threat-model.md)
+[Annexe 14 — API Contracts & Error Codes](../../annexes/annexe-14-api-contracts-and-error-codes.md)

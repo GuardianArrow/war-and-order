@@ -19,3 +19,4 @@ MODULES
 [Annexe 2 — Discord Executable Commands & UI Interactions](../../annexes/annexe-2-discord-commands-ui.md)
 [Annexe 3 — UX Surface & Components](../../annexes/annexe-3-ux-surface-components.md)
 [Annexe 4 — Database Schemas](../../annexes/annexe-4-database-schemas.md)
+[Annexe 5 — Technology & External Services](../../annexes/annexe-5-technology-and-services.md)

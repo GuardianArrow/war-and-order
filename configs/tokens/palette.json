@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "name": "AMS Core Palette",
+    "version": "v2025.08",
+    "generatedAtUTC": "2025-08-16T22:46:32.368844Z",
+    "notes": "Aligned with Annexe 17 \u2014 Design System & Content Guidelines. HSL values are provided without the 'hsl()' wrapper for easier CSS var usage."
+  },
+  "brand": {
+    "primary": {
+      "hex": "#4F46E5",
+      "hsl": "243 75% 59%",
+      "on": "#FFFFFF"
+    },
+    "secondary": {
+      "hex": "#06B6D4",
+      "hsl": "189 87% 42%",
+      "on": "#001018"
+    },
+    "accent": {
+      "hex": "#22C55E",
+      "hsl": "142 72% 45%",
+      "on": "#001005"
+    }
+  },
+  "semantic": {
+    "info": {
+      "hex": "#0EA5E9",
+      "hsl": "199 90% 54%",
+      "on": "#001019"
+    },
+    "success": {
+      "hex": "#10B981",
+      "hsl": "160 84% 39%",
+      "on": "#00100A"
+    },
+    "warning": {
+      "hex": "#F59E0B",
+      "hsl": "38 92% 50%",
+      "on": "#171000"
+    },
+    "danger": {
+      "hex": "#EF4444",
+      "hsl": "0 84% 63%",
+      "on": "#180203"
+    },
+    "critical": {
+      "hex": "#991B1B",
+      "hsl": "0 70% 36%",
+      "on": "#FFFFFF"
+    },
+    "neutral": {
+      "hex": "#64748B",
+      "hsl": "215 20% 49%",
+      "on": "#0B1020"
+    }
+  },
+  "neutral": {
+    "50": "#F8FAFC",
+    "100": "#F1F5F9",
+    "200": "#E2E8F0",
+    "300": "#CBD5E1",
+    "400": "#94A3B8",
+    "500": "#64748B",
+    "600": "#475569",
+    "700": "#334155",
+    "800": "#1F2937",
+    "900": "#0B1220"
+  },
+  "discord": {
+    "embed": {
+      "brand": "#4F46E5",
+      "info": "#0EA5E9",
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "danger": "#EF4444",
+      "critical": "#991B1B",
+      "neutral": "#64748B"
+    }
+  }
+}

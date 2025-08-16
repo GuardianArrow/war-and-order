@@ -27,3 +27,4 @@ MODULES
 [Annexe 10 — Data Protection & Privacy (DPA / Retention / Subject Access)](../../annexes/annexe-10-data-protection-privacy.md)
 [Annexe 11 — Accessibility & Localization QA](../../annexes/annexe-11-accessibility-localization-qa.md)
 [Annexe 12 — Load, Capacity & Cost Budget](../../annexes/annexe-12-load-capacity-cost-budget.md)
+[Annexe 13 — Risk Register & Threat Model](../../annexes/annexe-13-risk-register-threat-model.md)

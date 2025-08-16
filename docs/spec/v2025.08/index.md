@@ -22,3 +22,4 @@ MODULES
 [Annexe 5 — Technology & External Services](../../annexes/annexe-5-technology-and-services.md)
 [Annexe 6 — Policy Guard & Permission Rules](../../annexes/annexe-6-policy-guard.md)
 [Annexe 7 — Jobs, Scheduling & Idempotency](../../annexes/annexe-7-jobs-scheduling-idempotency.md)
+[Annexe 8 — Observability & Telemetry Taxonomy](../../annexes/annexe-8-observability-telemetry-taxonomy.md)

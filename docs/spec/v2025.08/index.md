@@ -24,3 +24,4 @@ MODULES
 [Annexe 7 — Jobs, Scheduling & Idempotency](../../annexes/annexe-7-jobs-scheduling-idempotency.md)
 [Annexe 8 — Observability & Telemetry Taxonomy](../../annexes/annexe-8-observability-telemetry-taxonomy.md)
 [Annexe 9 — Build, Release & CI/CD](../../annexes/annexe-9-build-release-cicd.md)
+[Annexe 10 — Data Protection & Privacy (DPA / Retention / Subject Access)](../../annexes/annexe-10-data-protection-privacy.md)

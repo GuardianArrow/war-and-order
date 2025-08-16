@@ -85,7 +85,7 @@ All sub-modules must reference Module A for consistency and integration.
 | **Member** | ❌          | ❌            | ❌         | ❌             | ❌        | ❌        | ❌    | ✅    | ✅              | ✅                |
 | **Visitor** | ❌         | ❌            | ❌         | ❌             | ❌        | ❌        | ❌    | ❌    | ✅ (limited)    | ❌                |
 
-> Final, enforceable rules live in **Annexe 6 – Policy Guard**.
+Final, enforceable rules live in **Annexe 6 – Policy Guard**.
 
 ---
 
@@ -202,4 +202,4 @@ EN, Arabic, German, Lithuanian, Serbian, French, Portuguese, Spanish, Vietnamese
 | 5 | Maintenance | Enable maintenance | All outbound sends paused |
 | 6 | Audit | Change role, edit event | Audit entries recorded |
 
-> ✅ Module A is **Locked** as of **2025-08-14**.
+✅ Module A is **Locked** as of **2025-08-14**.

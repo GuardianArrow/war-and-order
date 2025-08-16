@@ -16,3 +16,4 @@ MODULES
 [Module E — Culture & Community Core](../../modules/module-e-culture-core.md)
 
 [Annexe 1 — Surface Ownership: Discord vs PWA](../../annexes/annexe-1-surface-ownership.md)
+[Annexe 2 — Discord Executable Commands & UI Interactions](../../annexes/annexe-2-discord-commands-ui.md)

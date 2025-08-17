@@ -141,3 +141,7 @@ vite.config.ts.timestamp-*
 # OS junk (added)
 .DS_Store
 Thumbs.db
+
+# Playwright artifacts
+apps/web/playwright-report/
+apps/web/test-results/

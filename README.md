@@ -1,155 +1,191 @@
-# war-and-order
-Bot and App to support War and Order App game.
-## Project Context & Quick Start
+# War & Order — PWA + Discord Bot
 
-**Repo:** GuardianArrow/war-and-order  
-**Stack:** Node 20 LTS · PNPM workspaces · TypeScript · Next.js 14 · Tailwind · Playwright  
-**Docs:** Specs live in `docs/annexes/` (LOCKED). Start at `docs/spec/v2025.08/index.md`.
+A unified **PWA** and **Discord Bot** that helps alliances run War and Order. The project now ships with a **theming system** that works in both the web app and Discord embeds (named themes + per‑guild overrides).
 
-### What’s in here
-- **apps/**
-  - **web/** — Next.js PWA (design tokens page, future dashboards)
-  - **bot/** — Discord bot (intents / embeds / interactions) — _skeleton paths set_
-  - **worker/** — Background jobs (Annexe 7) — _planned_
-- **packages/** — Reserved for shared libs (policy, schema, db, i18n, telemetry, comms, api)
-- **configs/tokens/**
-  - **palette.json** — Canonical color palette (brand/semantic/role)
-  - **tailwind.tokens.ts** — Tailwind helpers (role color palette + runtime CSS vars)
-- **apps/bot/discord/styles/**
-  - **discord-embed-colors.ts** — Embed color map (Design System)
-- **docs/annexes/** — Annexes 1–17 (LOCKED)
-- **.github/workflows/**
-  - **web-e2e.yml** — PWA E2E (Playwright) CI workflow
-
-### Local dev (PWA)
-```bash
-pnpm install
-pnpm --filter ./apps/web dev
-# Visit: http://localhost:3000/design/tokens
-```
-
-**Design tokens smoke test**  
-Route **/design/tokens** renders palette swatches and role CSS vars. Tailwind is wired to `configs/tokens/tailwind.tokens.ts`.
-
-### E2E tests (Playwright)
-```bash
-# Local (nice reporter)
-pnpm run web:e2e
-
-# CI-style (line reporter)
-pnpm run web:e2e:ci
-```
-Playwright auto-starts the Next.js dev server via `apps/web/playwright.config.ts`.
-
-**Tests live in `apps/web/tests/`:**
-- `tokens.spec.ts` — palette swatches render
-- `tokens-vars.spec.ts` — role CSS variables are present
-
-### CI
-Workflow: `.github/workflows/web-e2e.yml`
-- Installs browsers for the web app only
-- Uses the `e2e:ci` script and Playwright `webServer` auto-start
-
-### Conventions (short)
-- **Workspaces:** PNPM (`pnpm -w` at repo root, `--filter ./apps/web` for web app)
-- **Commits:** Conventional Commits (`type(scope): message`)
-- **Docs:** Annex updates are LOCKED; record changes in **Annexe 15** (Revision History)
-- **Runtime:** Node 20 LTS; strict TS; Tailwind v3 wired to tokens
-
-### Handy paths
-- Tokens: `configs/tokens/palette.json`, `configs/tokens/tailwind.tokens.ts`
-- Embed colors: `apps/bot/discord/styles/discord-embed-colors.ts`
-- PWA tokens page: `apps/web/app/(public)/design/tokens/page.tsx`
-- Annex index: `docs/spec/v2025.08/index.md`
+> **Repo:** `GuardianArrow/war-and-order`  
+> **Stack:** Node 20 · PNPM Workspaces · TypeScript · Next.js 14 (App Router) · Tailwind · Playwright · Vitest · MongoDB
 
 ---
 
-## One-shot: add this section to README and push
+## What’s inside
 
-> Option A — Append to `README.md`
+```
+apps/
+  web/                      # Next.js PWA
+    app/(public)/design/    # Tokens, components gallery, themes admin
+    components/design/      # Preview widgets + ThemePicker
+    tests/                  # Playwright tests (tokens/components + snapshots + persistence)
+    app/api/themes/[guildId]/route.ts  # REST endpoint to read/write per‑guild theme config
+  bot/                      # Discord bot
+    discord/styles/         # Theme-aware embed color resolver
+    discord/commands/       # /theme slash command (set/show/override/clear)
+    data/                   # Mongo DAO for guild_theme_configs (TTL cache)
+    tests/                  # Vitest unit tests (resolver, overrides, tone/status)
+configs/
+  tokens/
+    palette.json            # Named themes (default, midnight…) + role scales
+    tailwind.tokens.ts      # Emits CSS vars for each theme (Tailwind plugin)
+docs/
+  annexes/                  # Product & tech specs (LOCKED); see Annexe 17
+.github/
+  workflows/ci.yml          # CI: Vitest (bot) + Playwright (web)
+```
 
+---
+
+## Theming — What you can do now
+
+- **Named themes** in `configs/tokens/palette.json` (e.g. `default`, `midnight`).  
+- **Runtime switching** in the PWA via `next-themes` (`data-theme="<key>"`).  
+- **Per‑guild overrides** stored in Mongo (`guild_theme_configs`) like `{ "--role-primary-500": "#123456" }`.  
+- **Discord embeds** use the **same tokens** via `embedColorFor(themeKey, role, shade, overrides?)`.  
+- **Admin UI** `/design/themes` to read/write the per‑guild config through the REST route.  
+- **Screenshots** generated for docs: default + midnight (Playwright).
+
+**Quick demo**
+- Visit **`/design/tokens`** and **`/design/components`**.  
+- Use the header **ThemePicker** or append **`?theme=midnight`** to the URL.  
+- Theme choice persists across pages via `localStorage["wao-theme"]`.
+
+---
+
+## Quick start
+
+### 1) Install dependencies (root)
 ```bash
-cat >> README.md <<'MD'
-## Project Context & Quick Start
-
-**Repo:** GuardianArrow/war-and-order  
-**Stack:** Node 20 LTS · PNPM workspaces · TypeScript · Next.js 14 · Tailwind · Playwright  
-**Docs:** Specs live in `docs/annexes/` (LOCKED). Start at `docs/spec/v2025.08/index.md`.
-
-### What’s in here
-- **apps/**
-  - **web/** — Next.js PWA (design tokens page, future dashboards)
-  - **bot/** — Discord bot (intents / embeds / interactions) — _skeleton paths set_
-  - **worker/** — Background jobs (Annexe 7) — _planned_
-- **packages/** — Reserved for shared libs (policy, schema, db, i18n, telemetry, comms, api)
-- **configs/tokens/**
-  - **palette.json** — Canonical color palette (brand/semantic/role)
-  - **tailwind.tokens.ts** — Tailwind helpers (role color palette + runtime CSS vars)
-- **apps/bot/discord/styles/**
-  - **discord-embed-colors.ts** — Embed color map (Design System)
-- **docs/annexes/** — Annexes 1–17 (LOCKED)
-- **.github/workflows/**
-  - **web-e2e.yml** — PWA E2E (Playwright) CI workflow
-
-### Local dev (PWA)
-\`\`\`bash
 pnpm install
+```
+
+### 2) Run the PWA
+```bash
 pnpm --filter ./apps/web dev
-# Visit: http://localhost:3000/design/tokens
-\`\`\`
+# http://localhost:3000/design/tokens
+```
 
-**Design tokens smoke test**  
-Route **/design/tokens** renders palette swatches and role CSS vars. Tailwind is wired to \`configs/tokens/tailwind.tokens.ts\`.
+### 3) Run the bot (requires a .env with DISCORD_TOKEN etc.)
+```bash
+pnpm --filter ./apps/bot dev
+```
 
-### E2E tests (Playwright)
-\`\`\`bash
-# Local (nice reporter)
-pnpm run web:e2e
+> **Secrets:** For local dev, create `.env` files in each app:
+>
+> `apps/web/.env.local` (optional if you hit the themes API)  
+> `apps/bot/.env` (required)  
+> 
+> **Required keys:**  
+> - `MONGODB_URI` — connection string (or provide via Codespaces/CI secrets)  
+> - `MONGODB_DB` — database name (defaults to `ams`)  
+> - `DISCORD_TOKEN`, `DISCORD_CLIENT_ID`, (optional) `DISCORD_GUILD_ID` for command registration  
+> - `GUILD_THEME_CACHE_TTL_MS` — optional cache TTL override for the DAO
 
-# CI-style (line reporter)
-pnpm run web:e2e:ci
-\`\`\`
-Playwright auto-starts the Next.js dev server via \`apps/web/playwright.config.ts\`.
+---
 
-**Tests live in \`apps/web/tests/\`:**
-- \`tokens.spec.ts\` — palette swatches render
-- \`tokens-vars.spec.ts\` — role CSS variables are present
+## Web app: key routes
+
+- `/design/tokens` — role color scales (50‑900) with live swatches.  
+- `/design/components` — live previews (Buttons, Alerts, Discord Embed). Supports `?theme=<key>`.  
+- `/design/themes` — minimal admin UI to read/write a guild’s theme selection + overrides.  
+- `/api/themes/[guildId]` — REST endpoint (GET, PATCH) for `guild_theme_configs`.
+
+**Tailwind wiring**
+- `roleColorPalette()` exposes colors via `hsl(var(--role-...)/<alpha-value>)`.  
+- `makeThemeCssVars()` registers CSS vars for **all themes** (`:root` for default, `[data-theme="<key>"]` for others).  
+- `globals.css` defines font/radius/shadow tokens; per‑theme overrides can swap them.
+
+---
+
+## Discord bot: theming
+
+**Resolver**
+```ts
+embedColorFor(themeKey, role, shade?, overrides?) → number  // 0xRRGGBB
+colorFromToneWithTheme(themeKey, 'info'|'success'|..., overrides?) → number
+colorFromEventStatusWithTheme(themeKey, 'Live'|'Cancelled'|..., overrides?) → number
+```
+
+**Guild-aware helper**
+```ts
+embedColorForGuild(guildId, role, shade?) → number
+// internally resolves themeKey + overrides via Mongo DAO, with TTL cache
+```
+
+**Slash command**
+```
+/theme set key:<default|midnight|…>
+/theme override name:<--role-primary-500> value:<#RRGGBB>
+/theme clear name:<--role-primary-500>
+/theme show
+```
+
+---
+
+## Tests & CI
+
+### Playwright (web)
+```bash
+# Run E2E
+pnpm --filter ./apps/web run test
+
+# Generate snapshots (tokens + components, default + midnight)
+pnpm --filter ./apps/web run test:snapshots
+
+# Show last report
+pnpm --filter ./apps/web run report
+```
+
+### Vitest (bot)
+```bash
+pnpm --filter ./apps/bot test         # single run
+pnpm --filter ./apps/bot test:watch   # watch mode
+```
 
 ### CI
-Workflow: \`.github/workflows/web-e2e.yml\`
-- Installs browsers for the web app only
-- Uses the \`e2e:ci\` script and Playwright \`webServer\` auto-start
+`.github/workflows/ci.yml` runs both:
+- **Vitest** (bot) on Node 20
+- **Playwright** (web) with the app auto‑served
 
-### Conventions (short)
-- **Workspaces:** PNPM (\`pnpm -w\` at repo root, \`--filter ./apps/web\` for web app)
-- **Commits:** Conventional Commits (\`type(scope): message\`)
-- **Docs:** Annex updates are LOCKED; record changes in **Annexe 15** (Revision History)
-- **Runtime:** Node 20 LTS; strict TS; Tailwind v3 wired to tokens
+---
 
-### Handy paths
-- Tokens: \`configs/tokens/palette.json\`, \`configs/tokens/tailwind.tokens.ts\`
-- Embed colors: \`apps/bot/discord/styles/discord-embed-colors.ts\`
-- PWA tokens page: \`apps/web/app/(public)/design/tokens/page.tsx\`
-- Annex index: \`docs/spec/v2025.08/index.md\`
-MD
+## Key files (jump list)
 
-git add README.md
-git commit -m "docs(readme): add Project Context & Quick Start section"
-git push
-```
+- **Palette:** `configs/tokens/palette.json`  
+- **Tailwind tokens:** `configs/tokens/tailwind.tokens.ts`  
+- **Theme globals:** `apps/web/app/(public)/design/globals.css`  
+- **Theme provider:** `apps/web/app/providers.tsx` (next‑themes)  
+- **ThemePicker:** `apps/web/components/design/ThemePicker.tsx`  
+- **Admin UI:** `apps/web/app/(public)/design/themes/page.tsx`  
+- **REST route:** `apps/web/app/api/themes/[guildId]/route.ts`  
+- **Embed colors (bot):** `apps/bot/discord/styles/embed-colors.ts`  
+- **Guild DAO (bot):** `apps/bot/discord/data/guildThemeDao.ts`  
+- **Bot tests:** `apps/bot/tests/embed-colors.test.ts`  
+- **Web tests:** `apps/web/tests/*.spec.ts` + `snapshots.spec.ts`
 
-> Option B — Keep as `docs/README_Context_Summary.md` and link it from README
+---
 
-```bash
-mkdir -p docs
-cp README_Context_Summary.md docs/README_Context_Summary.md
+## Troubleshooting
 
-# Add a link near the top of README.md
-grep -q "README_Context_Summary.md" README.md ||   printf '
-> See also: [Project Context & Quick Start](docs/README_Context_Summary.md)
-' >> README.md
+- **ESLint config errors (Next 14 vs ESLint 9):** use the pre‑ESLint‑9 setup in `apps/web/.eslintrc.json`.  
+- **Brackets in folders (Next App Router):** use literal folder names like `[guildId]` when creating route segments.  
+- **Mongo in API routes:** ensure `apps/web/app/api/themes/[guildId]/route.ts` runs on the **Node.js** runtime (`export const runtime = 'nodejs'`).  
+- **Palette changes not visible:** Restart the dev server after editing `palette.json` so Tailwind can re‑emit CSS vars.
 
-git add README.md docs/README_Context_Summary.md
-git commit -m "docs: add README context summary and link"
-git push
-```
+---
+
+## Roadmap (next)
+
+- Rich guild dashboards (events, attendance, CBSP tools).  
+- Admin UX for theme cloning/export/import.  
+- Policy Guard + audit trails (Annexe 6 & 19).  
+- Worker jobs and delivery metrics (Annexes 7 & 8).
+
+---
+
+## License
+
+MIT (unless superseded by alliance‑internal policy).
+
+---
+
+### Credits
+
+Design & engineering by the Gavin Turner

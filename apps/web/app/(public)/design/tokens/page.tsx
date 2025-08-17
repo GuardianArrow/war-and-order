@@ -1,4 +1,6 @@
 // apps/web/app/(public)/design/tokens/page.tsx
+import Link from 'next/link';
+
 export const dynamic = "force-static";
 
 const shades = ['50','100','200','300','400','500','600','700','800','900'] as const;
@@ -72,6 +74,16 @@ export default function DesignTokensPage() {
           <ColorRow prefix="neutral" />
         </div>
       </section>
+
+      {/* Link to Components Gallery */}
+      <div className="mt-10">
+        <Link
+          href="/design/components"
+          className="inline-flex items-center rounded-xl border px-4 py-2 text-sm font-medium hover:bg-muted"
+        >
+          → View Components Gallery
+        </Link>
+      </div>
     </main>
   );
 }

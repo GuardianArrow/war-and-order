@@ -1,5 +1,7 @@
+// apps/web/app/(public)/design/components/page.tsx
 'use client';
 
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import TokenVarPicker from '@/components/design/TokenVarPicker';
 import PreviewCard from '@/components/design/PreviewCard';
@@ -8,19 +10,26 @@ import ButtonPreview from '@/components/design/ButtonPreview';
 import AlertPreview from '@/components/design/AlertPreview';
 
 export default function ComponentsGalleryPage() {
-  // Default to the first role-ish var we can find at runtime; fallback to a common name
+  // Default to a role var known to exist; picker can change it live
   const [selectedVar, setSelectedVar] = useState<string>('--role-war-commander');
 
-  const styleVar = useMemo(() => ({
-    // Common "accent" custom property that children can reference if they want nesting patterns
-    // but components below bind directly to the token with arbitrary Tailwind values
-    // Keeping this for potential nesting / theming scope examples.
-    ['--accent' as any]: `var(${selectedVar})`,
-  }), [selectedVar]);
+  const styleVar = useMemo(
+    () => ({
+      // Optional shared accent var for nested examples
+      ['--accent' as any]: `var(${selectedVar})`,
+    }),
+    [selectedVar]
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">
       <header className="space-y-2">
+        <nav className="text-sm text-muted-foreground">
+          <Link href="/design/tokens" className="underline decoration-dotted">Tokens</Link>
+          <span className="px-1">/</span>
+          <span className="text-foreground">Components</span>
+        </nav>
+
         <h1 className="text-3xl font-semibold tracking-tight">Design Components</h1>
         <p className="text-sm text-muted-foreground">
           Live previews of UI elements driven by your token CSS variables. Pick any token below and the components will update.
@@ -42,6 +51,12 @@ export default function ComponentsGalleryPage() {
           <AlertPreview tokenVar={selectedVar} />
         </PreviewCard>
       </section>
+
+      <footer className="pt-4 text-sm">
+        <Link href="/design/tokens" className="inline-flex items-center gap-1 underline decoration-dotted">
+          ← Back to Tokens
+        </Link>
+      </footer>
     </div>
   );
 }

@@ -1,5 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* apps/web/app/(public)/design/globals.css */
+/* Theme variable layer: fonts/radii/shadows
+   NOTE: Color role vars (e.g. --role-primary-500) are emitted by the Tailwind plugin (makeThemeCssVars). */
 
-body { @apply bg-neutral-950 text-neutral-200; }
+/* Default theme binds to :root */
+:root {
+  /* Fonts are provided by next/font via CSS vars set on <html> */
+  --font-sans: var(--font-sans-inter);
+  --font-serif: var(--font-serif-lora);
+
+  /* Shape & elevation examples (extend as needed) */
+  --radius-xl: 1rem;                     /* 16px */
+  --shadow-md: 0 6px 20px rgba(0,0,0,.12);
+}
+
+/* Example non-default theme overrides */
+[data-theme="midnight"] {
+  /* Swap base font to serif for demo */
+  --font-sans: var(--font-serif-lora);
+
+  /* Slightly larger radius on this theme */
+  --radius-xl: 1.25rem;
+}

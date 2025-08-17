@@ -1,8 +1,9 @@
+
 # Annexe 4 — Database Schemas — ✅ **LOCKED**
 *Status:* Locked  
-*Last Updated:* 2025-08-15 (Europe/London)
+*Last Updated:* 2025-08-17 (UTC)
 
-> Conventions apply across all collections unless noted. All strings are localized by Module D where marked `i18nKey`. API semantics (ETag/If‑Match, error families) are detailed in Annexe 14.
+> Conventions apply across all collections unless noted. All strings are localized by Module D where marked `i18nKey`. API semantics (ETag/If-Match, error families) are detailed in Annexe 14.
 
 ---
 
@@ -72,7 +73,7 @@
   "startedBy": "string?",
   "startedAt": "ISODate?",
   "scheduledWindow": { "startUTC": "ISODate?", "endUTC": "ISODate?" },
-  "allowlistActions": ["string"]  // e.g., ["privacy.delete"]
+  "allowlistActions": ["string"]
 }
 ```
 *Effect:* when `enabled=true`, API rejects event publish/broadcast with `POLICY.DENY` & reason `MAINTENANCE_MODE`; workers queue but don’t deliver (Annexe 7). PWA shows banner with message.
@@ -392,7 +393,7 @@
 | icon           | string  |     | URL/asset key    |
 | criteria       | object  | ✓   | Rule JSON        |
 | isSeasonal     | boolean | ✓   |                  |
-| changeLog      | array   |     | `{ ts, actorId, note }[]` |
+| changeLog      | array   |     | `{ ts, actorId, note }` |
 
 **Indexes:** `{ guildId:1, badgeId:1 }`, `{ guildId:1, catalogVersion:1 }`.
 
@@ -436,7 +437,7 @@
 | archivedAt    | ISODate  |     |                                         |
 | settings      | object   |     | `{ autoArchiveDays:int (default 30) }`  |
 
-**Indexes:** `{ guildId:1, archivedAt:1 }`, `{ guildId:1, lastActiveAt:1 }`, `{ guildId:1, name:1 } (collation)`.
+**Indexes:** `{ guildId:1, archivedAt:1 }`, `{ guildId:1, lastActiveAt:1 }`, `{ guildId:1, name:1 }` (collation).
 
 > *Deprecation note:* older `culture_posts`/`kudos` are superseded by activities/submissions/votes and badges. Migrate via Annexe 15.
 
@@ -457,7 +458,7 @@
 
 **Indexes:**  
 `{ guildId:1, state:1, runAt:1 }`,  
-`{ guildId:1, type:1, "payload.idempotencyKey":1, "payload.runAtBucket":1 } (unique — dedupe per Annexe 7)`.
+`{ guildId:1, type:1, "payload.idempotencyKey":1, "payload.runAtBucket":1 }` (unique — dedupe per Annexe 7).
 
 ---
 
@@ -530,11 +531,76 @@ updateOne(
 
 ---
 
-## Revision Notes (2025-08-15)
+## 4.24 Theming (per guild) — `guild_theme_configs`
 
-- **Comms:** Replaced §4.16 with richer `comms_messages`/`comms_deliveries` (messageId, idempotency, DM fallback, quiet-hours deferral).
-- **Formation:** March types & saved formations (B3) retained.
-- **Culture:** Activities/submissions/votes; `pHash`; quiz bank; clubs; badge catalog vs awards split.
-- **Settings:** Feature flags & maintenance models clarified.
-- **Jobs:** Added unique dedupe index on `(type, payload.idempotencyKey, payload.runAtBucket)`.
-- **Consistency:** Standardized enums, indexes, guild scoping, version CAS, and ETag/If-Match reference.
+> **Purpose:** allow each guild to pick a **theme key** from the canonical palette and optionally provide **CSS variable overrides** (minimal, last-resort). Used by the PWA for live theming and by the Discord bot when mapping embed colors.
+
+| Field         | Type    | Req | Notes                                                                 |
+|---------------|---------|-----|-----------------------------------------------------------------------|
+| configId      | string  | ✓   | PK (ULID/UUID)                                                        |
+| guildId       | string  | ✓   | Discord guild ID                                                      |
+| themeKey      | string  | ✓   | e.g., `default`, `midnight` (must exist in `configs/tokens/palette.json`) |
+| overrides     | object  |     | `Record<string,string>`; CSS var name → value (e.g., `"--role-primary-500":"#4F46E5"`) |
+| updatedAt     | ISODate | ✓   | ISO timestamp                                                         |
+| updatedBy     | string  |     | Discord user id or `system`                                          |
+| version       | int     | ✓   | For CAS/ETag                                                          |
+
+**Constraints & validation:**  
+- `themeKey` ∈ keys of `palette.themes`.  
+- `overrides` keys must match `/^--[a-z0-9-]+$/` and values must be valid CSS colors or token values.  
+- Keep overrides **small**; prefer editing source themes in `palette.json` for broad changes.
+
+**Indexes:**  
+- `{ guildId:1 } (unique)` — one active config per guild.  
+- `{ themeKey:1 }` — optional, for analytics.  
+- `{ updatedAt:-1 }` — for recency listing.
+
+**Sample JSON Schema (abridged):**
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GuildThemeConfig",
+  "type": "object",
+  "required": ["configId","guildId","themeKey","updatedAt","version"],
+  "properties": {
+    "configId": { "type": "string" },
+    "guildId": { "type": "string" },
+    "themeKey": { "type": "string", "minLength": 1 },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "propertyNames": { "pattern": "^--[a-z0-9-]+$" }
+    },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "updatedBy": { "type": "string" },
+    "version": { "type": "integer", "minimum": 0 }
+  }
+}
+```
+
+**Resolution flow (PWA & Bot):**
+1. Look up `guild_theme_configs` by `guildId`.  
+2. `themeKey = doc?.themeKey ?? "default"`.  
+3. Apply `overrides` (if any) to the computed CSS var set.  
+4. For Discord embeds, call `embedColorFor(themeKey, role, shade)` (Annexe 17); overrides for role shades may be applied prior to hex selection.
+
+**API shape (example):**
+```json
+{
+  "configId": "gth_01HXXX...",
+  "guildId": "123456789012345678",
+  "themeKey": "midnight",
+  "overrides": {
+    "--role-primary-500": "#6D28D9"
+  },
+  "updatedAt": "2025-08-17T12:00:00.000Z",
+  "updatedBy": "987654321098765432",
+  "version": 3
+}
+```
+
+---
+
+## Revision Notes
+- **2025-08-15:** Major consolidation pass: comms_messages/comms_deliveries; activities/submissions/votes; march types & formations; flags and maintenance clarified; dedupe indexes added.
+- **2025-08-17:** Added §4.24 **`guild_theme_configs`** for per-guild theming (PWA + Discord), including indexes, validation, and resolution flow.

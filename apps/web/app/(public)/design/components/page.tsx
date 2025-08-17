@@ -10,6 +10,7 @@ import PreviewCard from '@/components/design/PreviewCard';
 import DiscordEmbedPreview from '@/components/design/DiscordEmbedPreview';
 import ButtonPreview from '@/components/design/ButtonPreview';
 import AlertPreview from '@/components/design/AlertPreview';
+import ThemePicker from '@/components/design/ThemePicker';
 
 export default function ComponentsGalleryPage() {
   // Persist theme via next-themes (works across pages)
@@ -36,7 +37,7 @@ export default function ComponentsGalleryPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 space-y-8">
       <header className="space-y-2">
-        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <nav className="text-sm text-muted-foreground">
             <Link href="/design/tokens" className="underline decoration-dotted">
               Tokens
@@ -45,26 +46,18 @@ export default function ComponentsGalleryPage() {
             <span className="text-foreground">Components</span>
           </nav>
 
-          {/* Tiny theme helpers for demos */}
-          <div className="text-xs text-muted-foreground">
-            Theme:&nbsp;
-            <code className="rounded bg-card/60 px-1 py-0.5 border">{shownTheme}</code>
-            <span className="mx-2">·</span>
-            <Link href="/design/components?theme=default" className="underline decoration-dotted">
-              default
-            </Link>
-            <span className="mx-1">/</span>
-            <Link href="/design/components?theme=midnight" className="underline decoration-dotted">
-              midnight
-            </Link>
+          {/* Components gallery header actions: ThemePicker */}
+          <div className="flex items-center">
+            <ThemePicker />
           </div>
         </div>
 
         <h1 className="text-3xl font-semibold tracking-tight">Design Components</h1>
         <p className="text-sm text-muted-foreground">
           Live previews of UI elements driven by your token CSS variables. Pick any token below and
-          the components will update. Add <code>?theme=midnight</code> to the URL to preview other
-          themes; your choice persists across pages.
+          the components will update. You can switch themes with the picker above (current:&nbsp;
+          <code className="rounded bg-card/60 px-1 py-0.5 border">{shownTheme}</code>), or append
+          <code className="ml-1">?theme=midnight</code> to this URL.
         </p>
       </header>
 
@@ -85,7 +78,10 @@ export default function ComponentsGalleryPage() {
       </section>
 
       <footer className="pt-4 text-sm">
-        <Link href="/design/tokens" className="inline-flex items-center gap-1 underline decoration-dotted">
+        <Link
+          href="/design/tokens"
+          className="inline-flex items-center gap-1 underline decoration-dotted"
+        >
           ← Back to Tokens
         </Link>
       </footer>

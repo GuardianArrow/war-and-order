@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import plugin from "tailwindcss/plugin";
 import { tokens, roleColorPalette, makeRoleCssVars } from "../../configs/tokens/tailwind.tokens";
 
 export default {
@@ -8,17 +7,13 @@ export default {
     extend: {
       colors: {
         role: roleColorPalette(tokens),
-        // expose neutral scale from palette.json if you have it
-        ...(tokens?.neutral ? { neutral: tokens.neutral } : {})
       },
-      borderColor: {
-        role: "var(--role-border)"
-      }
-    }
+    },
   },
+  // Register CSS variables like --role-primary-500 at :root
   plugins: [
-    plugin(function ({ addBase }) {
-      addBase({ ":root": makeRoleCssVars(tokens) });
-    })
-  ]
+    ({ addBase }: any) => {
+      addBase({ ':root': makeRoleCssVars(tokens) });
+    },
+  ],
 } satisfies Config;

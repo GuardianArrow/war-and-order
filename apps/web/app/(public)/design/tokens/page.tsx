@@ -1,9 +1,14 @@
 // apps/web/app/(public)/design/tokens/page.tsx
+'use client';
+
 import Link from 'next/link';
+import ThemePicker from '@/components/design/ThemePicker';
 
-export const dynamic = "force-static";
+export const dynamic = 'force-static';
 
-const shades = ['50','100','200','300','400','500','600','700','800','900'] as const;
+const shades = [
+  '50','100','200','300','400','500','600','700','800','900'
+] as const;
 
 function Swatch({
   className,
@@ -44,7 +49,10 @@ function ColorRow({ prefix }: { prefix: 'primary'|'success'|'warning'|'danger'|'
 export default function DesignTokensPage() {
   return (
     <main className="p-6 space-y-8">
-      <h1 className="text-xl font-semibold">Design Tokens</h1>
+      <header className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold">Design Tokens</h1>
+        <ThemePicker />
+      </header>
 
       <section className="space-y-4">
         <h2 className="text-sm text-neutral-400">Color palette</h2>

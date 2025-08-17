@@ -15,6 +15,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,25 +26,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
           cache: 'pnpm'
 
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright browsers
+      - name: Install Playwright browsers (web app only)
         run: pnpm --filter ./apps/web exec playwright install --with-deps
 
-      - name: Build & start Next.js (tokens page only)
-        working-directory: apps/web
-        env:
-          NODE_ENV: production
-        run: |
-          pnpm build
-          nohup pnpm start >/dev/null 2>&1 &
-
+      # Runs in CI mode (Playwright starts Next dev server via webServer in playwright.config.ts)
       - name: Run E2E
-        run: pnpm --filter ./apps/web e2e
+        run: pnpm --filter ./apps/web run e2e:ci
+        env:
+          CI: 'true'
 
       - name: Upload Playwright report (always)
         if: always()

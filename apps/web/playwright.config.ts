@@ -7,6 +7,12 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
 
+  // Always produce an HTML report (and list in terminal)
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }] // output defaults to apps/web/playwright-report
+  ],
+
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',

@@ -19,6 +19,16 @@ export default {
         // Uses CSS vars: hsl(var(--role-<name>-<shade>) / <alpha-value>)
         role: roleColorPalette(),
       },
+      fontFamily: {
+        sans: ['var(--font-sans)'],
+        serif: ['var(--font-serif)'],
+      },
+      borderRadius: {
+        xl: 'var(--radius-xl, 1rem)',
+      },
+      boxShadow: {
+        md: 'var(--shadow-md, 0 6px 20px rgba(0,0,0,.12))',
+      },
     },
   },
 

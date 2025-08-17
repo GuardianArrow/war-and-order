@@ -1,3 +1,4 @@
+// apps/bot/tests/embed-colors.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,7 +7,10 @@ import path from 'node:path';
 import {
   embedColorFor,
   embedColorForGuild,
+  colorFromToneWithTheme,
+  colorFromEventStatusWithTheme,
   hexToInt,
+  type RoleKey,
 } from '../discord/styles/embed-colors';
 
 // Load palette.json to compute expected HEX dynamically (no TS JSON import needed)
@@ -24,22 +28,46 @@ describe('embedColorFor (theme + overrides)', () => {
     expect(got).toBe(expected);
   });
 
-  it('resolves midnight theme primary-500 (if defined)', () => {
-    // If "midnight" isn’t defined, skip (keeps test tiny & portable)
+  it('resolves midnight theme primary-500 when defined', () => {
+    // If "midnight" isn’t defined, skip (keeps test portable)
     const midnightHex = palette?.themes?.midnight?.primary?.['500'];
-    if (!midnightHex) return; // noop
+    if (!midnightHex) return;
 
     const expected = hexToInt(midnightHex);
     const got = embedColorFor('midnight', 'primary', '500');
     expect(got).toBe(expected);
   });
 
-  it('applies overrides before palette', () => {
+  it('applies overrides before palette (role/shade)', () => {
     const overrideHex = '#123456';
     const got = embedColorFor('default', 'primary', '500', {
       '--role-primary-500': overrideHex,
     });
     expect(got).toBe(0x123456);
+  });
+
+  it('supports various roles + shades without throwing', () => {
+    const roles: RoleKey[] = ['primary', 'success', 'warning', 'danger', 'neutral'];
+    for (const r of roles) {
+      const n = embedColorFor('default', r, '600');
+      expect(n).toBeTypeOf('number');
+    }
+  });
+});
+
+describe('Tone & status mapping', () => {
+  it('brand tone equals Live status color for a given theme', () => {
+    const a = colorFromToneWithTheme('default', 'brand');
+    const b = colorFromEventStatusWithTheme('default', 'Live');
+    expect(a).toEqual(b);
+  });
+
+  it('override precedence also affects tone mapping (e.g., warning → role:warning-500)', () => {
+    const overrideHex = '#ABCD12';
+    const n = colorFromToneWithTheme('default', 'warning', {
+      '--role-warning-500': overrideHex,
+    });
+    expect(n).toBe(parseInt(overrideHex.slice(1), 16));
   });
 });
 

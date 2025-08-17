@@ -54,6 +54,9 @@ importers:
 
   apps/web:
     dependencies:
+      mongodb:
+        specifier: ^6.18.0
+        version: 6.18.0
       next:
         specifier: 14.x
         version: 14.2.31(@playwright/test@1.54.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3387,14 +3390,6 @@ snapshots:
     optionalDependencies:
       vite: 5.4.19(@types/node@20.19.11)
 
-  '@vitest/mocker@2.1.9(vite@5.4.19(@types/node@24.3.0))':
-    dependencies:
-      '@vitest/spy': 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.17
-    optionalDependencies:
-      vite: 5.4.19(@types/node@24.3.0)
-
   '@vitest/pretty-format@2.1.9':
     dependencies:
       tinyrainbow: 1.2.0
@@ -5450,7 +5445,7 @@ snapshots:
   vitest@2.1.9(@types/node@24.3.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.19(@types/node@24.3.0))
+      '@vitest/mocker': 2.1.9(vite@5.4.19(@types/node@20.19.11))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9

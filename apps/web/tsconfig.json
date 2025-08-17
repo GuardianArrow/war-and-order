@@ -6,7 +6,6 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
-    "incremental": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -15,18 +14,13 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@lib/*": ["./lib/*"]
     },
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "types": ["node"]
   },
   "include": [
     "next-env.d.ts",
-    "app/**/*",
-    "components/**/*",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

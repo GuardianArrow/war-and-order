@@ -4,6 +4,7 @@
 // Also supports per-guild overrides like { "--role-primary-500": "#123456" }.
 
 import palette from '../../../../configs/tokens/palette.json';
+import { getGuildThemeConfig } from '../data/guildThemeDao';
 
 // ---------- Types ----------
 export type RoleKey = 'primary' | 'success' | 'warning' | 'danger' | 'neutral';
@@ -100,6 +101,19 @@ export function embedColorFor(
   return hexToInt(hex);
 }
 
+/**
+ * Guild-aware resolver: reads the guild's themeKey & overrides, then returns the role color.
+ */
+export async function embedColorForGuild(
+  guildId: string,
+  role: RoleKey,
+  shade: string = '500'
+): Promise<number> {
+  const cfg = await getGuildThemeConfig(guildId);
+  const key = cfg?.themeKey ?? 'default';
+  return embedColorFor(key, role, shade, cfg?.overrides);
+}
+
 // ---------- Tone & status helpers ----------
 
 /** Map event status → tone (kept from legacy API) */
@@ -188,4 +202,5 @@ export function colorFromEventStatus(status: EventStatus): number {
  *   const color = embedColorFor('midnight','warning'); // theme-aware int
  *   const color2 = colorFromEventStatusWithTheme('default','Live'); // theme-aware via tone
  *   const color3 = embedColorFor('default','primary','500',{ '--role-primary-500':'#123456' }); // override wins
+ *   const color4 = await embedColorForGuild(guildId, 'warning', '600'); // resolves via guild config
  */

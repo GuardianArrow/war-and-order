@@ -9,6 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "test": "vitest",
+    "web:e2e": "pnpm --filter ./apps/web e2e",
+    "web:e2e:ci": "pnpm --filter ./apps/web run e2e:ci",
     "prepare": "husky install"
   },
   "devDependencies": {

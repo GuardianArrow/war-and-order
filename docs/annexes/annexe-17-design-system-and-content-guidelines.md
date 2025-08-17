@@ -1,19 +1,19 @@
 # Annexe 17 — Design System & Content Guidelines (LOCKED)
-_Last Updated: 2025-08-16 (Europe/London)_
+_Last Updated: 2025-08-17 (Europe/London)_
 
 **Status:** LOCKED · **Scope:** Cross-cutting (Discord + PWA) · **Owner:** Design Lead / Tech Lead (R4) · **Approvals:** R5 for palette/brand changes
 
 This annexe defines canonical **tokens, typography, color palettes, component variants, imagery specs**, and **copy conventions** for both the **PWA** and **Discord surfaces**. It complements interaction rules (Annexe 3), accessibility (Annexe 11), and privacy (Annexe 10).
 
-**Cross‑refs:** Annexe 1 (surface ownership) · Annexe 3 (UX) · Annexe 4 (schemas) · Annexe 5 (stack) · Annexe 6 (policy) · Annexe 7 (jobs) · Annexe 8 (observability) · Annexe 9 (CI/CD) · Annexe 10 (privacy) · Annexe 11 (a11y) · Annexe 14 (API) · Annexe 16 (repo layout)
+**Cross-refs:** Annexe 1 (surface ownership) · Annexe 3 (UX) · Annexe 4 (schemas) · Annexe 5 (stack) · Annexe 6 (policy) · Annexe 7 (jobs) · Annexe 8 (observability) · Annexe 9 (CI/CD) · Annexe 10 (privacy) · Annexe 11 (a11y) · Annexe 14 (API) · Annexe 16 (repo layout)
 
 ---
 
 ## 17.1 Rationale & Goals
 - **Consistency** across PWA and Discord embeds/buttons.
-- **A11y-first**: WCAG 2.1 AA contrast; never rely on color alone (Annexe 11).
-- **i18n‑ready**: copy is **Module D** keys; length expansion tolerated (pseudo‑locale).
-- **Low‑cost**: small asset sizes; Shared tokens in Tailwind + CSS vars.
+- **A11y-first**: WCAG 2.1 AA contrast; never rely on color alone (Annexe 11).
+- **i18n-ready**: copy is **Module D** keys; length expansion tolerated (pseudo-locale).
+- **Low-cost**: small asset sizes; Shared tokens in Tailwind + CSS vars.
 - **Operable**: status colors map to policy/telemetry states; embeds readable on mobile.
 
 ---
@@ -22,7 +22,7 @@ This annexe defines canonical **tokens, typography, color palettes, component va
 Declared in **`configs/tailwind.config.ts`** and **`apps/web/styles/globals.css`** as CSS variables. Discord uses the same **semantic names** via the embed builder in `packages/shared-comms`.
 
 ### 17.2.1 Semantic color tokens
-> **Do not hardcode HEX in app code.** Use semantic tokens below. Values are a **starter palette** and may be re‑skinned later without changing component code.
+> **Do not hardcode HEX in app code.** Use semantic tokens below. Values are a **starter palette** and may be re-skinned later without changing component code.
 
 Light theme (suggested starter values):
 ```ts
@@ -74,21 +74,21 @@ Dark theme:
 }
 ```
 
-**Status mapping (must‑use):**
+**Status mapping (must-use):**
 - `info` → neutral notices, FYI banners, audience preview.
 - `success` → completed/sent/attended.
-- `warning` → deprecations, quiet‑hours deferrals, soft alerts.
+- `warning` → deprecations, quiet-hours deferrals, soft alerts.
 - `danger` → destructive, cancellations, policy denials.
 
-> **A11y:** Text over solid status backgrounds must be ≥ **4.5:1** contrast (Annexe 11).
+> **A11y:** Text over solid status backgrounds must be ≥ **4.5:1** contrast (Annexe 11).
 
 ### 17.2.2 Elevation, radii, spacing
 - **Radii:** `--radius-sm: 8px`, `--radius-md: 12px`, `--radius-lg: 16px`, `--radius-2xl: 24px`.
 - **Shadows (subtle):** `--shadow-sm: 0 1px 2px rgba(0,0,0,.06)`, `--shadow-md: 0 6px 20px rgba(0,0,0,.12)`.
-- **Spacing scale:** 4‑pt steps (`2,4,8,12,16,20,24,32,40` etc.).
+- **Spacing scale:** 4-pt steps (`2,4,8,12,16,20,24,32,40` etc.).
 
 ### 17.2.3 Typography
-- **Families:** UI text → System UI / Inter; Mono → ui‑monospace.
+- **Families:** UI text → System UI / Inter; Mono → ui-monospace.
 - **Scale (rem):** `xs .75`, `sm .875`, `base 1`, `lg 1.125`, `xl 1.25`, `2xl 1.5`, `3xl 1.875`, `4xl 2.25`.
 - **Weights:** 400 normal, 500 medium, 600 semibold.
 - **Use:** Page H1 `3xl/600`, Section H2 `2xl/600`, H3 `xl/600`, Body `base/400`, Small help `sm/400`.
@@ -101,13 +101,13 @@ Dark theme:
 ### 17.3.1 Buttons (PWA)
 - **Variants:** `primary`, `secondary`, `subtle`, `destructive` (maps to tokens above).
 - **Sizes:** `sm`, `md` (default).
-- **Labels:** verb‑first, ≤ **22 chars**, localizable; may include emoji (🌟) if helpful.
-- **Icons:** `lucide-react` left‑aligned; keep accessible text.
-- **States:** hover, focus (outline 2px using `--primary`), disabled (opacity .5 + no color‑only semantics).
+- **Labels:** verb-first, ≤ **22 chars**, localizable; may include emoji (🌟) if helpful.
+- **Icons:** `lucide-react` left-aligned; keep accessible text.
+- **States:** hover, focus (outline 2px using `--primary`), disabled (opacity .5 + no color-only semantics).
 
 ### 17.3.2 Buttons (Discord)
 - Use concise **localized** labels; emoji optional; **danger** variant only with confirm modal.
-- Keep to **Annexe 3** limits; long flows deep‑link (“Open in Dashboard”).
+- Keep to **Annexe 3** limits; long flows deep-link (“Open in Dashboard”).
 
 ### 17.3.3 Cards & Panels (PWA)
 - Card background `--card`; radius `--radius-xl` (`16–20px`); shadow `--shadow-md`.
@@ -125,12 +125,12 @@ Dark theme:
 ---
 
 ## 17.4 Imagery & Asset Specs
-> Storage: serve via the PWA (with CDN) or R2; Discord uploads as attachments. **Strip EXIF** on upload (Annexe 10).
+> Storage: serve via the PWA (with CDN) or R2; Discord uploads as attachments. **Strip EXIF** on upload (Annexe 10).
 
 ### 17.4.1 Types & placements
-- **Thumbnail (square):** 1:1 · **512×512** (min 256×256) · ≤ **200 KB** · `webp/png`.
-- **Banner/Hero (wide):** 16:9 · **1280×720** (prefer 1600×900 or 1920×1080 for hero) · ≤ **400–800 KB** · `webp/jpg`.
-- **Embed image (Discord):** prefer **16:9** ≤ ~1 MB; avoid text‑heavy images.
+- **Thumbnail (square):** 1:1 · **512×512** (min 256×256) · ≤ **200 KB** · `webp/png`.
+- **Banner/Hero (wide):** 16:9 · **1280×720** (prefer 1600×900 or 1920×1080 for hero) · ≤ **400–800 KB** · `webp/jpg`.
+- **Embed image (Discord):** prefer **16:9** ≤ ~1 MB; avoid text-heavy images.
 - **Avatar/Icon:** 40–64 px logical.
 
 ### 17.4.2 Usage rules
@@ -142,13 +142,13 @@ Dark theme:
 ### 17.4.3 Content & a11y
 - Provide **alt text** (PWA) / descriptive **caption** (Discord; no native alt).
 - Avoid text embedded in images; rely on copy for localization.
-- Center‑safe composition (mobile crops).
+- Center-safe composition (mobile crops).
 
 ---
 
 ## 17.5 Copy & Tone (i18n)
-- **Keys only** (Module D). Examples: `events.publish.confirm_title`, `comms.preview.sample_label`.
-- **Tone:** clear, concise, player‑first; avoid jargon; sentence case in body; Title Case for titles.
+- **Keys only** (Module D). Examples: `events.publish.confirm_title`, `comms.preview.sample_label`.
+- **Tone:** clear, concise, player-first; avoid jargon; sentence case in body; Title Case for titles.
 - **Placeholders:** ICU with named vars (`{{count}}`, `{{time, time}}`); pluralize properly.
 - **Emoji:** sparing; reinforce meaning, never replace it. Examples: ✅ Approved, ✖ Cancelled, 🔔 Reminder.
 
@@ -158,7 +158,7 @@ Dark theme:
 ### 17.6.1 Layout
 - **Title** (H2), **Summary** (≤ 140 chars), **Body** (≤ ~600 chars), **CTA** button (“Open in Dashboard”).
 - **Status banner** color by message type (`info/success/warning/danger`).
-- **Audience Preview** block shows **count + 10 samples** (Annexe 3/6).
+- **Audience Preview** block shows **count + 10 samples** (Annexe 3/6).
 
 ### 17.6.2 Examples (i18n keys)
 - `comms.broadcast.title_key`
@@ -169,14 +169,14 @@ Dark theme:
 
 ## 17.7 Motion
 - Use **Framer Motion**; respect **prefers-reduced-motion**.
-- Durations: **150–250 ms** standard; **100 ms** micro; **300 ms** modal.
+- Durations: **150–250 ms** standard; **100 ms** micro; **300 ms** modal.
 - Easing: `easeOut` for entrances, `easeIn` for exits; distances ≤ 16–24 px.
 
 ---
 
 ## 17.8 Iconography
 - **lucide-react** set. Size 16/18/20 px in buttons; 24 px in cards.
-- Always accompany with text label. Mirror directional icons in RTL (Annexe 11).
+- Always accompany with text label. Mirror directional icons in RTL (Annexe 11).
 
 ---
 
@@ -188,11 +188,11 @@ Dark theme:
 ---
 
 ## 17.10 QA & Gates
-- **Contrast** passes AA (Annexe 11).
-- **Pseudo‑locale** shows no clipping (length + brackets).
+- **Contrast** passes AA (Annexe 11).
+- **Pseudo-locale** shows no clipping (length + brackets).
 - **RTL** verified on key flows.
 - **File sizes** under caps; **EXIF stripped**.
-- **Visual diffs** in CI for EN + pseudo‑locale (Annexe 11).
+- **Visual diffs** in CI for EN + pseudo-locale (Annexe 11).
 
 ---
 
@@ -203,13 +203,23 @@ Dark theme:
 ---
 
 ## 17.12 Quick Reference (cheat sheet)
-- **Buttons:** primary/secondary/subtle/destructive; verb‑first labels; ≤ 22 chars.
+- **Buttons:** primary/secondary/subtle/destructive; verb-first labels; ≤ 22 chars.
 - **Status colors:** info / success / warning / danger (semantic tokens).
-- **Images:** thumbnail 512×512; banner 1280×720+; keep ≤ 200–800 KB; webp preferred.
+- **Images:** thumbnail 512×512; banner 1280×720+; keep ≤ 200–800 KB; webp preferred.
 - **Embeds:** short titles, concise body, use color bar; attach image only when it adds value.
-- **Copy:** Module D keys; ICU; emoji optional; never color‑only.
+- **Copy:** Module D keys; ICU; emoji optional; never color-only.
 
 ---
 
-## 17.13 Revision Notes
-- **2025‑08‑16:** Initial LOCKED version; seeded starter palette, typography scale, asset specs, and Discord/PWA alignment.
+## 17.13 Design Snapshots
+### Design Snapshot: Tokens
+![Design Tokens](../../static/images/design/design-tokens.png)
+
+### Design Snapshot: Components Gallery
+![Design Components](../../static/images/design/design-components.png)
+
+---
+
+## 17.14 Revision Notes
+- **2025-08-16:** Initial LOCKED version; seeded starter palette, typography scale, asset specs, and Discord/PWA alignment.
+- **2025-08-17:** Added snapshot previews (tokens/components) for Annex 17 cross-ref.

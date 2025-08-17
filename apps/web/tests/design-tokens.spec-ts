@@ -1,0 +1,9 @@
+import { test, expect } from "@playwright/test";
+
+test("design tokens visual", async ({ page }) => {
+  await page.goto("/design/tokens");
+  // Give Tailwind a tick to paint custom props
+  await page.waitForTimeout(250);
+  const shot = await page.screenshot({ fullPage: true });
+  expect(shot).toMatchSnapshot("design-tokens.png", { maxDiffPixelRatio: 0.02 });
+});

@@ -1,24 +1,39 @@
+// apps/web/app/(public)/design/tokens/page.tsx
 export const dynamic = "force-static";
 
 const shades = ['50','100','200','300','400','500','600','700','800','900'] as const;
 
-function Swatch({ varName, label }: { varName: string; label: string }) {
+function Swatch({
+  className,
+  label,
+  testId,
+}: {
+  className: string;
+  label: string;
+  testId?: string;
+}) {
   return (
     <div className="flex flex-col items-center gap-2">
       <div
-        className="w-24 h-16 rounded-lg border border-neutral-700 shadow-sm"
-        style={{ background: `var(${varName})` }}
+        data-testid={testId}
+        className={`w-24 h-16 rounded-lg border border-role-border shadow-sm ${className}`}
+        aria-label={label}
       />
       <div className="text-xs text-neutral-300">{label}</div>
     </div>
   );
 }
 
-function ColorRow({ role }: { role: 'primary'|'success'|'warning'|'danger'|'neutral' }) {
+function ColorRow({ prefix }: { prefix: 'primary'|'success'|'warning'|'danger'|'neutral' }) {
   return (
     <div className="flex flex-wrap gap-4">
       {shades.map((s) => (
-        <Swatch key={s} varName={`--role-${role}-${s}`} label={`${role}-${s}`} />
+        <Swatch
+          key={s}
+          className={`bg-role-${prefix}-${s}`}
+          label={`${prefix}-${s}`}
+          testId={`swatch-${prefix}-${s}`}
+        />
       ))}
     </div>
   );
@@ -27,26 +42,34 @@ function ColorRow({ role }: { role: 'primary'|'success'|'warning'|'danger'|'neut
 export default function DesignTokensPage() {
   return (
     <main className="p-6 space-y-8">
-      <header>
-        <h1 className="text-2xl font-semibold">Design Tokens</h1>
-        <p className="text-sm text-neutral-400">
-          Palette, typography, buttons, and Discord embed color strips — all wired to our tokens.
-        </p>
-      </header>
+      <h1 className="text-xl font-semibold">Design Tokens</h1>
 
       <section className="space-y-4">
-        <h2 className="text-lg font-medium">Color palette</h2>
-        <div className="space-y-3">
-          <h3 className="text-sm text-neutral-400">Primary</h3>
-          <ColorRow role="primary" />
-          <h3 className="text-sm text-neutral-400 mt-4">Success</h3>
-          <ColorRow role="success" />
-          <h3 className="text-sm text-neutral-400 mt-4">Warning</h3>
-          <ColorRow role="warning" />
-          <h3 className="text-sm text-neutral-400 mt-4">Danger</h3>
-          <ColorRow role="danger" />
-          <h3 className="text-sm text-neutral-400 mt-4">Neutral</h3>
-          <ColorRow role="neutral" />
+        <h2 className="text-sm text-neutral-400">Color palette</h2>
+
+        <div className="space-y-2">
+          <div className="text-xs text-neutral-400">Primary</div>
+          <ColorRow prefix="primary" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-xs text-neutral-400">Success</div>
+          <ColorRow prefix="success" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-xs text-neutral-400">Warning</div>
+          <ColorRow prefix="warning" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-xs text-neutral-400">Danger</div>
+          <ColorRow prefix="danger" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="text-xs text-neutral-400">Neutral</div>
+          <ColorRow prefix="neutral" />
         </div>
       </section>
     </main>

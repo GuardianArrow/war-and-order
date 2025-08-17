@@ -6,6 +6,8 @@ import { Inter, Lora } from 'next/font/google';
 import './globals.css';
 import './(public)/design/globals.css';
 
+import { Providers } from './providers';
+
 export const metadata = { title: 'AMS Web' };
 
 const inter = Inter({
@@ -24,7 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${lora.variable}`}>
       <body className="min-h-dvh antialiased bg-neutral-950 text-neutral-200">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

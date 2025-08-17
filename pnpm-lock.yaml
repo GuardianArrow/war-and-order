@@ -49,7 +49,7 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
       vitest:
-        specifier: ^2.0.5
+        specifier: ^2.1.9
         version: 2.1.9(@types/node@24.3.0)
 
   apps/web:
@@ -3387,6 +3387,14 @@ snapshots:
     optionalDependencies:
       vite: 5.4.19(@types/node@20.19.11)
 
+  '@vitest/mocker@2.1.9(vite@5.4.19(@types/node@24.3.0))':
+    dependencies:
+      '@vitest/spy': 2.1.9
+      estree-walker: 3.0.3
+      magic-string: 0.30.17
+    optionalDependencies:
+      vite: 5.4.19(@types/node@24.3.0)
+
   '@vitest/pretty-format@2.1.9':
     dependencies:
       tinyrainbow: 1.2.0
@@ -5442,7 +5450,7 @@ snapshots:
   vitest@2.1.9(@types/node@24.3.0):
     dependencies:
       '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(vite@5.4.19(@types/node@20.19.11))
+      '@vitest/mocker': 2.1.9(vite@5.4.19(@types/node@24.3.0))
       '@vitest/pretty-format': 2.1.9
       '@vitest/runner': 2.1.9
       '@vitest/snapshot': 2.1.9
